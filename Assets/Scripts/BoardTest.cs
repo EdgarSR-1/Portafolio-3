@@ -2,47 +2,46 @@ using UnityEngine;
 
 public class BoardTest : MonoBehaviour
 {
+    [Header("Referencias")]
     [SerializeField] private BoardManager boardManager;
-    [SerializeField] private RectTransform dominoPrefab;
-    [SerializeField] private RectTransform boardPieces;
-
+    [SerializeField] private DominoTileView dominoPrefab;
 
     private void Start()
     {
-        // Instanciar dentro del Canvas y de BoardPieces.
-        RectTransform tile = Instantiate(
-            dominoPrefab,
-            boardPieces,
-            false
-        );
+        // Ficha inicial: Agua Fuego
+        DominoTileView startingTile =
+            CreateTile("tile_001", ElementType.Agua, ElementType.Fuego);
 
-        PlaceTileCommand command = new PlaceTileCommand(
-            boardManager,
-            tile,
-            5,
-            4
-        );
+        boardManager.SetStartingTile(startingTile);
 
-        bool success = command.Execute();
+        // Ficha a la derecha: Fuego Vapor
+        DominoTileView rightTile =
+            CreateTile("tile_002", ElementType.Fuego, ElementType.Vapor);
 
-        Debug.Log(success
-            ? "Ficha colocada correctamente."
-            : "No se pudo colocar la ficha."
-        );
+        PlaceTileCommand rightCommand =
+            new PlaceTileCommand(boardManager, rightTile, BoardSide.Right);
+
+        Debug.Log("Colocar derecha: " + rightCommand.Execute());
+
+        // Ficha a la izquierda: Cristal Agua
+        DominoTileView leftTile =
+            CreateTile("tile_003", ElementType.Cristal, ElementType.Agua);
+
+        PlaceTileCommand leftCommand =
+            new PlaceTileCommand(boardManager, leftTile, BoardSide.Left);
+
+        Debug.Log("Colocar izquierda: " + leftCommand.Execute());
     }
 
-    private void OnEnable()
+    private DominoTileView CreateTile(
+        string id, ElementType left, ElementType right)
     {
-        boardManager.OnTilePlaced += HandleTilePlaced;
-    }
+        DominoTileView tile = Instantiate(dominoPrefab);
 
-    private void OnDisable()
-    {
-        boardManager.OnTilePlaced -= HandleTilePlaced;
-    }
+        DominoTileData data = new DominoTileData(id, left, right);
 
-    private void HandleTilePlaced(RectTransform tile, int x, int y)
-    {
-        Debug.Log($"Ficha colocada en ({x}, {y})");
+        tile.SetData(data);
+
+        return tile;
     }
 }

@@ -1,24 +1,20 @@
-using UnityEngine;
-
 public class PlaceTileCommand
 {
     private readonly BoardManager boardManager;
-    private readonly RectTransform tile;
-    private readonly int x;
-    private readonly int y;
+    private readonly DominoTileView tile;
+    private readonly BoardSide side;
 
     public PlaceTileCommand(
-        BoardManager boardManager, RectTransform tile, int x, int y
+        BoardManager boardManager, DominoTileView tile, BoardSide side
     )
     {
         this.boardManager = boardManager;
         this.tile = tile;
-        this.x = x;
-        this.y = y;
+        this.side = side;
     }
 
     public bool Execute()
     {
-        return boardManager.TryPlaceTile(tile, x, y);
+        return boardManager.TryPlaceTile(tile, side);
     }
 }
