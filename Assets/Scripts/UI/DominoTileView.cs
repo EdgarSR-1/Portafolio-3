@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -95,7 +96,19 @@ public class DominoTileView : MonoBehaviour
         }
     }
 
-    private void Oestroy()
+    public void Flip()
+    {
+        ElementType temp = Data.leftElement;
+
+        Data.leftElement = Data.rightElement;
+        Data.rightElement = temp;
+
+        // actualizar imagenes
+        leftImage.sprite = GetElementSprite(Data.leftElement);
+        rightImage.sprite = GetElementSprite(Data.rightElement);
+    }
+
+    private void OnDestroy()
     {
         if (tileButton != null) tileButton.onClick.RemoveListener(SelectTile);
     }
