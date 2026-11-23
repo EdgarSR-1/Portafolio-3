@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +14,24 @@ public class DominoTileView : MonoBehaviour
     [Header("Sprites de elementos")]
     [SerializeField] private Sprite[] elementSprites;
 
+    [Header("Selección")]
+    [SerializeField] private Button tileButton;
+    [SerializeField] private Image selectionBorder;
+    [SerializeField] private Sprite[] selectionSprites;
+    [SerializeField] private float animationSpeed = 0.2f;
+
     public DominoTileData Data { get; private set; }
+
+    // Patron observer: avisa cuando se hace click en la ficha
+    public event Action<DominoTileView> OnSelected;
+
+    private Coroutine selectionAnimation;
+
+    public void Awake()
+    {
+        tileButton.onClick.AddListener(SelectTile);
+        selectionBorder.enabled = false;
+    }
 
     public void SetData(DominoTileData data)
     {
@@ -33,5 +53,50 @@ public class DominoTileView : MonoBehaviour
         }
 
         return elementSprites[index];
+    }
+
+    private void SelectTile()
+    {
+        // if (OnSelected != null ) OnSelected(this);
+        OnSelected?.Invoke(this);
+    }
+
+    public void SetSelected(bool selected)
+    {
+        if (selectionAnimation != null)
+        {
+            StopCoroutine(selectionAnimation);
+            selectionAnimation = null;
+        }
+
+        if (!selected)
+        {
+            selectionBorder.enabled = false;
+            return;
+        }
+
+        selectionBorder.enabled = true;
+        selectionAnimation = StartCoroutine(PlaySelectionAnimation());
+    }
+
+    private IEnumerator PlaySelectionAnimation()
+    {
+        int currentFrame = 0;
+        
+        while (true)
+        {
+            selectionBorder.sprite = selectionSprites[currentFrame];
+
+            currentFrame++;
+
+            if (currentFrame >= selectionSprites.Length) currentFrame = 0;
+
+            yield return new WaitForSeconds(animationSpeed);
+        }
+    }
+
+    private void Oestroy()
+    {
+        if (tileButton != null) tileButton.onClick.RemoveListener(SelectTile);
     }
 }
