@@ -508,6 +508,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 266702953}
   m_CullTransparentMesh: 1
+--- !u!1 &301697274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301697276}
+  - component: {fileID: 301697275}
+  m_Layer: 0
+  m_Name: TurnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &301697275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301697274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1c5d19628f7bfeebc4568de26cde6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  playerCount: 1
+--- !u!4 &301697276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301697274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.70869, y: -0.32384, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &316754458
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,8 +707,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameUIManager
   boardManager: {fileID: 1337596085}
   handManager: {fileID: 870056266}
+  deckManager: {fileID: 1322634030}
   leftButton: {fileID: 2133034653}
   rightButton: {fileID: 1582558958}
+  drawButton: {fileID: 1024395675}
+  passButton: {fileID: 439945843}
+  turnManager: {fileID: 301697275}
 --- !u!1 &412265350
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,7 +1343,7 @@ MonoBehaviour:
   handContent: {fileID: 2017863042}
   dominoPrefab: {fileID: 2150993663924954355, guid: dd9a7907f63827b11a6c05f19bb5fa93, type: 3}
   startingHandSize: 7
-  availableElements: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+  deckManager: {fileID: 1322634030}
 --- !u!1 &908594709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,6 +1891,52 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0434, y: 0.79294, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1322634029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1322634031}
+  - component: {fileID: 1322634030}
+  m_Layer: 0
+  m_Name: DeckManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1322634030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322634029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854e1392089de65b5ab79e9305dbee8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeckManager
+  startingPoolSize: 20
+  availableElements: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b000000
+--- !u!4 &1322634031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322634029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.70869, y: -0.32384, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3557,5 +3652,7 @@ SceneRoots:
   - {fileID: 1337596084}
   - {fileID: 870056265}
   - {fileID: 363500247}
+  - {fileID: 1322634031}
+  - {fileID: 301697276}
   - {fileID: 1357655115}
   - {fileID: 1968279060}

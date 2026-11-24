@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
@@ -76,7 +75,7 @@ public class BoardManager : MonoBehaviour
         if (!CanPlaceTile(tile, side))  return false;
 
         // comprobar si necesita rotar la ficha
-        if (side == BoardSide.Right) if (tile.Data.leftElement != RightEnd) tile.Flip();
+        if (side == BoardSide.Right) { if (tile.Data.leftElement != RightEnd) tile.Flip(); }
         else if (tile.Data.rightElement != LeftEnd) tile.Flip();
 
         // tile.transform.SetParent(boardContent, false);
@@ -98,6 +97,9 @@ public class BoardManager : MonoBehaviour
     private void UpdateBoardLayout()
     {
         if (tiles.Count == 0) return;
+
+        // actualizar el layout antes de calcular cualquier cosa
+        Canvas.ForceUpdateCanvases();
 
         // RectTransform firstTile = tiles[0].GetComponent<RectTransform>();
 

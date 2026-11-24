@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.AI;
+using NUnit.Framework;
 
 
 public class HandManager : MonoBehaviour
@@ -11,7 +13,9 @@ public class HandManager : MonoBehaviour
 
     [Header("Configuración")]
     [SerializeField] private int startingHandSize = 7;
-    [SerializeField] private ElementType[] availableElements;
+    // [SerializeField] private ElementType[] availableElements;
+
+    [SerializeField] private DeckManager deckManager;
 
     private DominoTileView selectedTile;
 
@@ -33,7 +37,9 @@ public class HandManager : MonoBehaviour
     {
         for (int i = 0; i < startingHandSize; i++)
         {
-            DominoTileData data = CreateRandomTile();
+            // DominoTileData data = CreateRandomTile();
+
+            DominoTileData data = deckManager.DrawTile();
 
             playerHand.AddTile(data);
 
@@ -41,18 +47,18 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    private DominoTileData CreateRandomTile()
-    {
-        int leftIndex = UnityEngine.Random.Range(0, availableElements.Length);
-        int rightIndex = UnityEngine.Random.Range(0, availableElements.Length);
+    // private DominoTileData CreateRandomTile()
+    // {
+    //     int leftIndex = UnityEngine.Random.Range(0, availableElements.Length);
+    //     int rightIndex = UnityEngine.Random.Range(0, availableElements.Length);
 
-        ElementType left = availableElements[leftIndex];
-        ElementType right = availableElements[rightIndex];
+    //     ElementType left = availableElements[leftIndex];
+    //     ElementType right = availableElements[rightIndex];
 
-        string id = Guid.NewGuid().ToString();
+    //     string id = Guid.NewGuid().ToString();
 
-        return new DominoTileData(id, left, right);
-    }
+    //     return new DominoTileData(id, left, right);
+    // }
 
     // parte visual de la ficha
     private void CreateTileView(DominoTileData data)
@@ -92,5 +98,27 @@ public class HandManager : MonoBehaviour
         selectedTile = tile;
 
         selectedTile.SetSelected(true);
+    }
+
+    public void AddTile(DominoTileData data)
+    {
+        if (data == null) return;
+
+        playerHand.AddTile(data);
+        CreateTileView(data);
+    }
+
+    public bool HasPlayableTile(BoardManager boardManager)
+    {
+        foreach (DominoTileView tile in tileViews)
+        {
+            if (boardManager.CanPlaceTile(tile, BoardSide.Left) || 
+                boardManager.CanPlaceTile(tile, BoardSide.Right))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
