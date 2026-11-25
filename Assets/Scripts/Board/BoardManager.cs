@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class BoardManager : MonoBehaviour
 {
     [Header("Referencias")]
     [SerializeField] private RectTransform boardContent;
+    [SerializeField] private ReactionManager reactionManager;
 
     [Header("Layout")]
     [SerializeField] private float tileWidth = 240f;
@@ -46,49 +46,86 @@ public class BoardManager : MonoBehaviour
     {
         if (tile == null || tile.Data == null || tiles.Count > 0) return;
 
-        // no estaba guardando el tamaño en el lado izquierdo :/
-        // tile.transform.SetParent(boardContent, false);
         MoveTileToBoard(tile);
         tiles.Add(tile);
 
         UpdateBoardLayout();
     }
 
-    // Comprueba siuna ficha puede colocarse en el extremo
+    // Comprueba si unna reacción es valida
     public bool CanPlaceTile(DominoTileView tile, BoardSide side)
     {
         if (tile == null || tile.Data == null || tiles.Count == 0) return false;
 
-        // antes de poder hacer flip:
-        // if (side == BoardSide.Right) return tile.Data.leftElement == RightEnd;
+        // ElementType boardEnd;
+        // if (side == BoardSide.Right) boardEnd = RightEnd;
+        // else boardEnd = LeftEnd;
 
-        if (side == BoardSide.Right)
-            return tile.Data.leftElement == RightEnd || tile.Data.rightElement == RightEnd;
-        
-        // return tile.Data.rightElement == LeftEnd;
-        return tile.Data.rightElement == LeftEnd || tile.Data.leftElement == LeftEnd;
+        // si es derecho entonces rightend, si no, leftend
+        ElementType boardEnd = side == BoardSide.Right ? RightEnd : LeftEnd;
+
+        // variable para el output que no ocupo
+        ElementType result;
+
+        // checar ambos lados
+        bool matchesLeft = reactionManager.TryGetResult(boardEnd, tile.Data.leftElement, out result);
+        bool matchesRight = reactionManager.TryGetResult(boardEnd, tile.Data.rightElement, out result);
+
+        // return que sea true si cualquier lado da algo valido
+        return matchesLeft || matchesRight;
     }
 
-    // Intenta colocar la ficha en el tablero
+    // Intenta colocar la ficha en el tablero y realiza la reacción
     public bool TryPlaceTile(DominoTileView tile, BoardSide side)
     {
         if (!CanPlaceTile(tile, side))  return false;
 
-        // comprobar si necesita rotar la ficha
-        if (side == BoardSide.Right) { if (tile.Data.leftElement != RightEnd) tile.Flip(); }
-        else if (tile.Data.rightElement != LeftEnd) tile.Flip();
+        ElementType boardEnd = side == BoardSide.Right ? RightEnd : LeftEnd;
 
-        // tile.transform.SetParent(boardContent, false);
+        ElementType reactionResult;
+
+        bool reaction;
+
+        if (side == BoardSide.Right)
+        {
+            reaction = reactionManager.TryGetResult(boardEnd, tile.Data.leftElement, out reactionResult);
+            // el lado izquierdo debe conectar con el tablero
+            if (!reaction)
+            {
+                // si no conecta, invertir la ficha
+                tile.Flip();
+
+                reactionManager.TryGetResult(boardEnd, tile.Data.leftElement, out reactionResult);
+            }
+
+            // el lado derecho recibe el resultado de la reacción
+            tile.SetRightElement(reactionResult);
+        } else
+        {
+            reaction = reactionManager.TryGetResult(boardEnd, tile.Data.rightElement, out reactionResult);
+            // el lado derecho debe conectar con el tablero
+            if (!reaction)
+            {
+                // si no conecta
+                tile.Flip();
+
+                reactionManager.TryGetResult(boardEnd, tile.Data.rightElement, out reactionResult);
+            }
+            // lado izquierdo recibe resultado
+            tile.SetLeftElement(reactionResult);
+        }
+
         MoveTileToBoard(tile);
 
-        if (side == BoardSide.Left) tiles.Insert(0, tile);
+        if(side == BoardSide.Left) tiles.Insert(0, tile);
         else tiles.Add(tile);
 
         UpdateBoardLayout();
 
-        // if (OnTilePlaced != null) OnTilePlaced(tile, side);
-
+        // Observer : ficha colocada
         OnTilePlaced?.Invoke(tile, side);
+
+        Debug.Log("Reacción producida: " + reactionResult);
 
         return true;
     }

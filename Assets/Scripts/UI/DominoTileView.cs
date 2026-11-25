@@ -108,6 +108,18 @@ public class DominoTileView : MonoBehaviour
         rightImage.sprite = GetElementSprite(Data.rightElement);
     }
 
+    public void SetLeftElement(ElementType element)
+    {
+        Data.leftElement = element;
+        leftImage.sprite = GetElementSprite(element);
+    }
+
+    public void SetRightElement(ElementType element)
+    {
+        Data.rightElement = element;
+        rightImage.sprite = GetElementSprite(element);
+    }
+
     private void OnDestroy()
     {
         if (tileButton != null) tileButton.onClick.RemoveListener(SelectTile);
