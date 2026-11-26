@@ -1103,7 +1103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4544b907e555a99aa92ac6e9ef40d844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayer: 5
+  maxPlayer: 2
 --- !u!114 &304695928
 MonoBehaviour:
   m_ObjectHideFlags: 0

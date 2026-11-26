@@ -27,10 +27,15 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
         UpdatePlayerList();
     }
 
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        UpdatePlayerList();
+    }
+
     [PunRPC]
     public void UpdatePlayerList()
     {
-        startButton.interactable = PhotonNetwork.IsMasterClient;
+        startButton.interactable = PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2;
 
         playerNames.text = "";
 
@@ -43,6 +48,9 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     public void StartGame()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 2) return;
+        
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
         // dile a todos que carguen la escena
