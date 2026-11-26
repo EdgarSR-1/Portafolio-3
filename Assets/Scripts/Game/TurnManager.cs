@@ -3,7 +3,7 @@ using System;
 
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField] private int playerCount = 1;
+    [SerializeField] private int playerCount = 2;
 
     private int currentPlayer = 0;
     private int consecutivePasses = 0;
@@ -28,27 +28,35 @@ public class TurnManager : MonoBehaviour
 
         if (consecutivePasses >= playerCount)
         {
-            GameOver = true;
             Debug.Log("Empate: todos los jugadores pasaron turno");
-
+            EndGame();
             // if (OnDrawGame != null) OnDrawGame();
-
             OnDrawGame?.Invoke();
-
             return;
         }
 
-        currentPlayer++;
-
-        if (currentPlayer >= playerCount) currentPlayer = 0;
-
-        // if (OnTurnChanged != null) OnTurnChanged(currentPlayer);
-
-        OnTurnChanged?.Invoke(currentPlayer);
+        AdvanceTurn();
     }
 
     public void RegisterMove()
     {
+        if (GameOver) return;
+
         consecutivePasses = 0;
+        AdvanceTurn();
+    }
+
+    private void AdvanceTurn()
+    {
+        currentPlayer++;
+
+        if (currentPlayer >= playerCount) currentPlayer = 0;
+
+        OnTurnChanged?.Invoke(currentPlayer);
+    }
+
+    public void EndGame()
+    {
+        GameOver = true;
     }
 }

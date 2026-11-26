@@ -8,13 +8,59 @@ public class ReactionManager : MonoBehaviour
 
     private void Awake()
     {
-        AddReaction(ElementType.Agua, ElementType.Fuego, ElementType.Vapor);
-        AddReaction(ElementType.Roca, ElementType.Fuego, ElementType.Metal);
-        AddReaction(ElementType.Planta, ElementType.Agua, ElementType.Energia);
-        AddReaction(ElementType.Energia, ElementType.Vapor, ElementType.Luz);
-        AddReaction(ElementType.Azufre, ElementType.Roca, ElementType.Cristal);
-        AddReaction(ElementType.Luz, ElementType.Cristal, ElementType.Eter);
-        AddReaction(ElementType.Eter, ElementType.Metal, ElementType.Oro); // con este se gana
+        AddReaction(
+            ElementType.Agua,
+            ElementType.Fuego,
+            ElementType.Vapor
+        );
+
+        AddReaction(
+            ElementType.Vapor,
+            ElementType.Planta,
+            ElementType.Energia
+        );
+
+        AddReaction(
+            ElementType.Energia,
+            ElementType.Agua,
+            ElementType.Luz
+        );
+
+        AddReaction(
+            ElementType.Roca,
+            ElementType.Fuego,
+            ElementType.Metal
+        );
+
+        AddReaction(
+            ElementType.Metal,
+            ElementType.Agua,
+            ElementType.Cristal
+        );
+
+        AddReaction(
+            ElementType.Cristal,
+            ElementType.Azufre,
+            ElementType.Eter
+        );
+
+        AddReaction(
+            ElementType.Luz,
+            ElementType.Roca,
+            ElementType.Eter
+        );
+
+        AddReaction(
+            ElementType.Eter,
+            ElementType.Fuego,
+            ElementType.Oro
+        );
+
+        AddReaction(
+            ElementType.Luz,
+            ElementType.Azufre,
+            ElementType.Oro
+        );
     }
 
     private void AddReaction(ElementType first, ElementType second, ElementType result)

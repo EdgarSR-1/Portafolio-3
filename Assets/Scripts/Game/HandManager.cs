@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using NUnit.Framework;
+using Unity.VisualScripting;
 
 
 public class HandManager : MonoBehaviour
@@ -28,6 +29,8 @@ public class HandManager : MonoBehaviour
         get { return selectedTile; }
     }
 
+    public int RemainingTiles => deckManager.RemainingTiles;
+
     private void Start()
     {
         CreateStartingHand();
@@ -37,28 +40,19 @@ public class HandManager : MonoBehaviour
     {
         for (int i = 0; i < startingHandSize; i++)
         {
-            // DominoTileData data = CreateRandomTile();
-
-            DominoTileData data = deckManager.DrawTile();
-
-            playerHand.AddTile(data);
-
-            CreateTileView(data);
+            if (!DrawTile()) break;
         }
     }
 
-    // private DominoTileData CreateRandomTile()
-    // {
-    //     int leftIndex = UnityEngine.Random.Range(0, availableElements.Length);
-    //     int rightIndex = UnityEngine.Random.Range(0, availableElements.Length);
+    public bool DrawTile()
+    {
+        DominoTileData data = deckManager.DrawTile();
 
-    //     ElementType left = availableElements[leftIndex];
-    //     ElementType right = availableElements[rightIndex];
-
-    //     string id = Guid.NewGuid().ToString();
-
-    //     return new DominoTileData(id, left, right);
-    // }
+        if (data == null) return false;
+        
+        AddTile(data);
+        return true;
+    }
 
     // parte visual de la ficha
     private void CreateTileView(DominoTileData data)

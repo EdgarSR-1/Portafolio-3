@@ -7,14 +7,24 @@ public class DeckManager : MonoBehaviour
 {
     [Header("Configuración")]
     [SerializeField] private int startingPoolSize = 20;
-    [SerializeField] private ElementType[] availableElements;
+    
+    // solo puede tener elementos basicos y basado en las combinaciones sale lo demas
+    [SerializeField] private ElementType[] availableElements =
+    {
+        ElementType.Agua,
+        ElementType.Fuego,
+        ElementType.Roca,
+        ElementType.Planta,
+        ElementType.Azufre
+    };
 
     private List<DominoTileData> deck = new List<DominoTileData>();
 
-    public int RemainingTiles
-    {
-        get { return deck.Count; }
-    }
+    // public int RemainingTiles
+    // {
+    //     get { return deck.Count; }
+    // }
+    public int RemainingTiles => deck.Count;
 
     private void Awake()
     {
@@ -60,5 +70,13 @@ public class DeckManager : MonoBehaviour
         deck.RemoveAt(0);
 
         return tile;
+    }
+
+    public DominoTileData CreateRandomBasicTile()
+    {
+        ElementType left = availableElements[UnityEngine.Random.Range(0, availableElements.Length)];
+        ElementType right = availableElements[UnityEngine.Random.Range(0, availableElements.Length)];
+
+        return new DominoTileData(Guid.NewGuid().ToString(), left, right);
     }
 }

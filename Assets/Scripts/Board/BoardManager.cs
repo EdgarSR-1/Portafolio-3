@@ -17,8 +17,11 @@ public class BoardManager : MonoBehaviour
 
     private List<DominoTileView> tiles = new List<DominoTileView>();
 
-    // Patron Observer: avisa cuando se coloca una ficha.
+    // Observer: avisa cuando se coloca una ficha.
     public event Action<DominoTileView, BoardSide> OnTilePlaced;
+    
+    // Observer: avisa cuando ocurre una reacción
+    public event Action<ElementType> OnReaction;
 
     // Elementos que quedan libres en las esquinas del tablero
     public ElementType LeftEnd
@@ -124,6 +127,9 @@ public class BoardManager : MonoBehaviour
 
         // Observer : ficha colocada
         OnTilePlaced?.Invoke(tile, side);
+
+        // Observer : resultado de la reaccion
+        OnReaction?.Invoke(reactionResult);
 
         Debug.Log("Reacción producida: " + reactionResult);
 

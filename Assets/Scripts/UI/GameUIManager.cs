@@ -1,7 +1,6 @@
-using UnityEditor.Build;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class GameUIManager : MonoBehaviour
@@ -9,7 +8,7 @@ public class GameUIManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private BoardManager boardManager;
     [SerializeField] private HandManager handManager;
-    [SerializeField] private DeckManager deckManager;
+    [SerializeField] private GameManager gameManager;
 
     [Header("Botones")]
     [SerializeField] private Button leftButton;
@@ -18,6 +17,9 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private Button passButton;
 
     [SerializeField] private TurnManager turnManager;
+
+    [Header("Textos")]
+    [SerializeField] private TextMeshProUGUI drawPileText;
 
 
     void Start()
@@ -75,12 +77,7 @@ public class GameUIManager : MonoBehaviour
     {
         // solo se puede robar si no hay movimientos posibles
         if (handManager.HasPlayableTile(boardManager)) return;
-
-        DominoTileData data = deckManager.DrawTile();
-
-        if (data == null) return;
-
-        handManager.AddTile(data);
+        if (!handManager.DrawTile()) return;
 
         Debug.Log("Robaste una ficha");
         UpdateButtons();
@@ -90,20 +87,23 @@ public class GameUIManager : MonoBehaviour
     {
         // no puedes pasar turno si aun puedes usar una ficha
         if (handManager.HasPlayableTile(boardManager)) return;
-        if (deckManager.RemainingTiles > 0) return;
+        if (handManager.RemainingTiles > 0) return;
 
         turnManager.PassTurn();
-
         UpdateButtons();
     }
 
     // Activa los botones solamente cuando hay una ficha seleccionada.
     private void UpdateButtons()
     {
-        // bool hasSelectedTile = handManager.SelectedTile != null;
-
-        // leftButton.interactable = hasSelectedTile;
-        // rightButton.interactable = hasSelectedTile;
+        if (gameManager.CurrentState != GameState.Playing)
+        {
+            leftButton.interactable = false;
+            rightButton.interactable = false;
+            drawButton.interactable = false;
+            passButton.interactable = false;
+            return;
+        }
 
         DominoTileView selectedTile = handManager.SelectedTile;
 
@@ -115,14 +115,16 @@ public class GameUIManager : MonoBehaviour
 
         bool hasPlayableTile = handManager.HasPlayableTile(boardManager);
 
-        bool canDraw = !hasPlayableTile && deckManager.RemainingTiles > 0;
-        bool canPass = !hasPlayableTile && deckManager.RemainingTiles == 0;
+        bool canDraw = !hasPlayableTile && handManager.RemainingTiles > 0;
+        bool canPass = !hasPlayableTile && handManager.RemainingTiles == 0;
 
         leftButton.interactable = canPlayLeft;
         rightButton.interactable = canPlayRight;
 
         drawButton.interactable = canDraw;
         passButton.interactable = canPass;
+
+        drawPileText.text = handManager.RemainingTiles.ToString();
     }
 
     private void OnDestroy()
