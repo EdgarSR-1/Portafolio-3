@@ -24,9 +24,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected");
+        Debug.Log("CONNECTED | Region: " + PhotonNetwork.CloudRegion + " | Version: " + PhotonNetwork.AppVersion);
         PhotonNetwork.JoinLobby();
     }
+
+    // public override void OnJoinedLobby()
+    // {
+    //     Debug.Log("NETWORK MANAGER: Joined Lobby");
+    // }
 
     public override void OnCreatedRoom()
     {
@@ -39,6 +44,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         options.MaxPlayers = (byte)maxPlayer;
 
         PhotonNetwork.CreateRoom(_RoomName, options);
+        // Debug.Log(
+        // "ROOM CREATED: " +
+        // PhotonNetwork.CurrentRoom.Name +
+        // " | Visible: " +
+        // PhotonNetwork.CurrentRoom.IsVisible +
+        // " | Open: " +
+        // PhotonNetwork.CurrentRoom.IsOpen);
     }
 
     public void JoinRoom(string _RoomName)
@@ -51,4 +63,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel(_sceneName);
     }
+
+    // public override void OnCreateRoomFailed(short code, string message)
+    // {
+    //     Debug.LogError("CREATE ROOM FAILED: " + code + " | " + message);
+    // }
 }

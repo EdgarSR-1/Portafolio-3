@@ -11,10 +11,11 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
     [Header("Main Screen")]
     public Button btnCreateRoom;
     public Button btnFindRoom;
-
-    public void UpdateNickName(TMP_InputField _playeName)
+    
+    public void UpdateNickName(TMP_InputField _playerName)
     {
-        PhotonNetwork.NickName = _playeName.text;
+        PhotonNetwork.NickName = _playerName.text;
+        Debug.Log("Nickname asignado: " + PhotonNetwork.NickName);
     }
 
     public void ShowCreateRoom()
@@ -24,6 +25,7 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     public void ShowFindRoom()
     {
+        Debug.Log("Abriendo navegador de salas");
         SetScreen(GeneralLobyView);
     }
 }

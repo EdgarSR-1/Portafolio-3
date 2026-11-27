@@ -380,7 +380,7 @@ MonoBehaviour:
   LobbyRoomView: {fileID: 1165365957}
   GeneralLobyView: {fileID: 1881031973}
   roomListContainer: {fileID: 777817687}
-  roomPrefab: {fileID: 3688871668383497431, guid: e1aebcf2ef9453a10be8a20481df6d38, type: 3}
+  roomPrefab: {fileID: 757128789319846311, guid: e1aebcf2ef9453a10be8a20481df6d38, type: 3}
   btnUpdate: {fileID: 2046340316}
   btnCreateRoom: {fileID: 53273882}
   btnFindRoom: {fileID: 744993758}
@@ -1607,8 +1607,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2.6099854, y: 0.6500244}
-  m_SizeDelta: {x: -496.02, y: -314.58}
+  m_AnchoredPosition: {x: 9.25, y: 100.92999}
+  m_SizeDelta: {x: -1052.14, y: -580.79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &791950081
 MonoBehaviour:
@@ -3392,7 +3392,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 19545202}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: UpdateNickName
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1718503358}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4474,7 +4486,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 219}
+  m_AnchoredPosition: {x: -2.61, y: 414}
   m_SizeDelta: {x: 526.11, y: 87.67}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1901080441

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
+using UnityEditor.Animations;
 
 public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
@@ -14,9 +15,11 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     public RoomData roomPrefab;
     private List<GameObject> roomButtons = new List<GameObject>();
+
     private List<RoomInfo> roomsInfo = new List<RoomInfo>();
 
     public Button btnUpdate;
+    // public Button btnBack;
 
     GameObject CreateRoomButton(string _NameRoom, int _currentUsers)
     {
@@ -24,7 +27,6 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
         go.GetComponent<RoomData>().UpdateData(_NameRoom, _currentUsers);
 
         roomButtons.Add(go);
-
         return go;
     }
 
@@ -50,8 +52,15 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> Activeroom)
     {
-        Debug.Log("Lista actualizada");
+    Debug.Log("Lista actualizada: " + Activeroom.Count);
+    roomsInfo = Activeroom;
 
-        roomsInfo = Activeroom;
+    UpdateRoomList();
     }
+
+    // public override void OnRoomListUpdate(List<RoomInfo> Activeroom)
+    // {
+    //     Debug.Log("Lista actualizada");
+    //     roomsInfo = Activeroom;
+    // }
 }
