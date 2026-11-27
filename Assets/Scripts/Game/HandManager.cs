@@ -115,4 +115,22 @@ public class HandManager : MonoBehaviour
 
         return false;
     }
+
+    public DominoTileView FindTileByID(string tileID)
+    {
+        foreach (DominoTileView tile in tileViews)
+        {
+            if (tile.Data.tileID == tileID) return tile;
+        }
+
+        return null;
+    }
+
+    public DominoTileView CreateDetachedTile(DominoTileData data)
+    {
+        DominoTileView tile = Instantiate(dominoPrefab, handContent);
+        tile.SetData(data);
+
+        return tile;
+    }
 }

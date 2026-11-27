@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -18,8 +21,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
-
     }
 
     public override void OnConnectedToMaster()
@@ -68,4 +71,92 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // {
     //     Debug.LogError("CREATE ROOM FAILED: " + code + " | " + message);
     // }
+
+    public void RequestTilePlacement(
+        string tileID, int leftElement, int rightElement, int side)
+    {
+        photonView.RPC(
+            "RecieveMoveRequest", RpcTarget.MasterClient,
+            tileID, leftElement, rightElement, side);
+    }
+
+    [PunRPC]
+    private void RecieveMoveRequest(
+        string tileID, int leftElement, int rightElement, int side,
+        PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        GameUIManager gameUI = FindFirstObjectByType<GameUIManager>(); 
+        if (gameUI == null) return;
+
+        int requestingPlayer = info.Sender.ActorNumber - 1;
+
+        if (!gameUI.ValidateMoveRequest(
+            requestingPlayer, (ElementType)leftElement, (ElementType)rightElement, (BoardSide)side))
+        {
+            Debug.LogWarning("Movimiento Multiplayer Rechazado");
+            return;
+        }
+
+        photonView.RPC(
+            "BroadcastTilePlacement",RpcTarget.All,tileID,
+            leftElement, rightElement, side, requestingPlayer);
+    }
+
+    [PunRPC]
+    private void BroadcastTilePlacement(
+        string tileID, int leftElement, int rightElement, int side, int playerIndex)
+    {
+        GameUIManager gameUI = FindFirstObjectByType<GameUIManager>();
+        if (gameUI == null) return;
+
+        gameUI.ApplyNetworkMove(
+            tileID, (ElementType)leftElement, (ElementType)rightElement, (BoardSide)side, playerIndex);
+    }
+
+    public void RequestPass()
+    {
+        photonView.RPC("RecievePassRequest", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void RecievePassRequest(PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        GameUIManager gameUI = FindFirstObjectByType<GameUIManager>();
+        if (gameUI == null) return;
+
+        int player = info.Sender.ActorNumber - 1;
+        if (!gameUI.ValidatePassRequest(player)) return;
+
+        photonView.RPC("BroadcastPass", RpcTarget.All, player);
+    }
+
+    [PunRPC]
+    private void BroadCastPass(int playerIndex)
+    {
+        GameUIManager gameUI = FindFirstObjectByType<GameUIManager>();
+        if (gameUI == null) return;
+
+        gameUI.ApplyNetworkPass(playerIndex);
+    } 
+
+    public void RestartCurrentScene()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        // primero avisar a los demás, leugo cargar el master
+        photonView.RPC("RPC_RestartScene", RpcTarget.Others, sceneIndex);
+        PhotonNetwork.LoadLevel(sceneIndex);
+    }
+
+    [PunRPC]
+    private void RPC_RestartScene(int sceneIndex)
+    {
+        SceneManager.LoadScene(sceneIndex);
+    }
 }

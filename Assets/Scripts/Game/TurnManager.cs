@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class TurnManager : MonoBehaviour
 {
@@ -54,9 +55,35 @@ public class TurnManager : MonoBehaviour
         AdvanceTurn();
     }
 
-    public void RegisterMove()
+    public void RegisterSynchronizedPass()
     {
-        if (GameOver || !IsLocalTurn) return;
+        if (GameOver) return;
+
+        consecutivePasses++;
+        Debug.Log("Jugador " + currentPlayer + " pasó turno");
+
+        if (consecutivePasses >= playerCount)
+        {
+            Debug.Log("Empate; todos los jugadores pasaron turno");
+            EndGame();
+            OnDrawGame?.Invoke();
+            return;
+        }
+
+        AdvanceTurn();
+    }
+
+    // public void RegisterMove()
+    // {
+    //     if (GameOver || !IsLocalTurn) return;
+
+    //     consecutivePasses = 0;
+    //     AdvanceTurn();
+    // }
+
+    public void RegisterSynchronizedMove()
+    {
+        if (GameOver) return;
 
         consecutivePasses = 0;
         AdvanceTurn();

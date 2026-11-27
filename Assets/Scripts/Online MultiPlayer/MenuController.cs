@@ -16,7 +16,9 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     void Start()
     {
-        btnCreateRoom.interactable = false;
+        bool ready = PhotonNetwork.IsConnectedAndReady && !PhotonNetwork.InRoom;
+
+        btnCreateRoom.interactable = ready;
         btnFindRoom.interactable = false;
 
         if (PhotonNetwork.InRoom)

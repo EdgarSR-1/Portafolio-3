@@ -867,6 +867,7 @@ MonoBehaviour:
   gameManager: {fileID: 963034204}
   gameOverPanel: {fileID: 1811937144}
   resultText: {fileID: 657861243}
+  restartButton: {fileID: 1815217299}
 --- !u!1 &412265350
 GameObject:
   m_ObjectHideFlags: 0
