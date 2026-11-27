@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 public class TurnManager : MonoBehaviour
 {
@@ -13,14 +14,29 @@ public class TurnManager : MonoBehaviour
     public event Action<int> OnTurnChanged;
     public event Action OnDrawGame;
 
-    public int CurrentPlayer
+    // public int CurrentPlayer
+    // {
+    //     get { return currentPlayer; }
+    // }
+    public int CurrentPlayer => currentPlayer;
+
+    // identidad del jugador
+    public int LocalPlayerIndex
     {
-        get { return currentPlayer; }
+        get
+        {
+            if (PhotonNetwork.InRoom) return PhotonNetwork.LocalPlayer.ActorNumber - 1;
+
+            return 0;
+        }
     }
+
+    // checar si es tu turno
+    public bool IsLocalTurn => CurrentPlayer == LocalPlayerIndex;
 
     public void PassTurn()
     {
-        if (GameOver) return;
+        if (GameOver || !IsLocalTurn) return;
 
         consecutivePasses++;
 
@@ -40,7 +56,7 @@ public class TurnManager : MonoBehaviour
 
     public void RegisterMove()
     {
-        if (GameOver) return;
+        if (GameOver || !IsLocalTurn) return;
 
         consecutivePasses = 0;
         AdvanceTurn();
@@ -51,6 +67,8 @@ public class TurnManager : MonoBehaviour
         currentPlayer++;
 
         if (currentPlayer >= playerCount) currentPlayer = 0;
+
+        Debug.Log("Turno del jugador: " + currentPlayer);
 
         OnTurnChanged?.Invoke(currentPlayer);
     }

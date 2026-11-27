@@ -49,6 +49,7 @@ public class GameUIManager : MonoBehaviour
 
     private void PlayTile(BoardSide side)
     {
+        if (!turnManager.IsLocalTurn) return;
         DominoTileView selectedTile = handManager.SelectedTile;
 
         if (selectedTile == null)
@@ -75,6 +76,8 @@ public class GameUIManager : MonoBehaviour
 
     private void DrawTile()
     {
+        if (!turnManager.IsLocalTurn) return;
+
         // solo se puede robar si no hay movimientos posibles
         if (handManager.HasPlayableTile(boardManager)) return;
         if (!handManager.DrawTile()) return;
@@ -105,6 +108,8 @@ public class GameUIManager : MonoBehaviour
             return;
         }
 
+        bool isMyTurn = turnManager.IsLocalTurn;
+
         DominoTileView selectedTile = handManager.SelectedTile;
 
         bool canPlayLeft = selectedTile != null &&
@@ -118,11 +123,11 @@ public class GameUIManager : MonoBehaviour
         bool canDraw = !hasPlayableTile && handManager.RemainingTiles > 0;
         bool canPass = !hasPlayableTile && handManager.RemainingTiles == 0;
 
-        leftButton.interactable = canPlayLeft;
-        rightButton.interactable = canPlayRight;
+        leftButton.interactable = isMyTurn && canPlayLeft;
+        rightButton.interactable = isMyTurn && canPlayRight;
 
-        drawButton.interactable = canDraw;
-        passButton.interactable = canPass;
+        drawButton.interactable = isMyTurn && canDraw;
+        passButton.interactable = isMyTurn && canPass;
 
         drawPileText.text = handManager.RemainingTiles.ToString();
     }
