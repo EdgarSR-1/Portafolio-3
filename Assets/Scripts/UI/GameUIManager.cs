@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.Build;
-using UnityEngine.TextCore;
 using Photon.Pun;
 
 

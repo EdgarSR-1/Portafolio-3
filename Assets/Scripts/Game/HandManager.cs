@@ -1,9 +1,5 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
-using UnityEngine.AI;
-using NUnit.Framework;
-using Unity.VisualScripting;
 
 
 public class HandManager : MonoBehaviour

@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
-using UnityEngine.UI;
 
 public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
