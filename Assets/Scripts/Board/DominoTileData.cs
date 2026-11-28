@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-// usar monobehaviour estaba dandome errores
+
 public class DominoTileData
 {
     public string tileID;

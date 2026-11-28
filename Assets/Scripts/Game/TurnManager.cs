@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using Photon.Pun;
-using Photon.Realtime;
 
 public class TurnManager : MonoBehaviour
 {
@@ -9,8 +8,6 @@ public class TurnManager : MonoBehaviour
 
     private int currentPlayer = 0;
     private int consecutivePasses = 0;
-
-    public bool GameOver { get; private set; }
 
     public event Action<int> OnTurnChanged;
     public event Action OnDrawGame;
@@ -35,37 +32,14 @@ public class TurnManager : MonoBehaviour
     // checar si es tu turno
     public bool IsLocalTurn => CurrentPlayer == LocalPlayerIndex;
 
-    public void PassTurn()
-    {
-        if (GameOver || !IsLocalTurn) return;
-
-        consecutivePasses++;
-
-        Debug.Log("Jugador " + currentPlayer + " paso su turno");
-
-        if (consecutivePasses >= playerCount)
-        {
-            Debug.Log("Empate: todos los jugadores pasaron turno");
-            EndGame();
-            // if (OnDrawGame != null) OnDrawGame();
-            OnDrawGame?.Invoke();
-            return;
-        }
-
-        AdvanceTurn();
-    }
-
     public void RegisterSynchronizedPass()
     {
-        if (GameOver) return;
-
         consecutivePasses++;
         Debug.Log("Jugador " + currentPlayer + " pasó turno");
 
         if (consecutivePasses >= playerCount)
         {
-            Debug.Log("Empate; todos los jugadores pasaron turno");
-            EndGame();
+            Debug.Log("Empate: todos los jugadores pasaron turno");
             OnDrawGame?.Invoke();
             return;
         }
@@ -73,18 +47,9 @@ public class TurnManager : MonoBehaviour
         AdvanceTurn();
     }
 
-    // public void RegisterMove()
-    // {
-    //     if (GameOver || !IsLocalTurn) return;
-
-    //     consecutivePasses = 0;
-    //     AdvanceTurn();
-    // }
 
     public void RegisterSynchronizedMove()
     {
-        if (GameOver) return;
-
         consecutivePasses = 0;
         AdvanceTurn();
     }
@@ -98,10 +63,5 @@ public class TurnManager : MonoBehaviour
         Debug.Log("Turno del jugador: " + currentPlayer);
 
         OnTurnChanged?.Invoke(currentPlayer);
-    }
-
-    public void EndGame()
-    {
-        GameOver = true;
     }
 }

@@ -1,8 +1,22 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public struct Recipe
+{
+    public ElementType first, second, result;
+
+    public Recipe(ElementType first, ElementType second, ElementType result)
+    {
+        this.first = first; this.second = second; this.result = result;
+    }
+}
+
 public class ReactionManager : MonoBehaviour
 {
+    private List<Recipe> recipes = new List<Recipe>();
+    public IReadOnlyList<Recipe> Recipes => recipes;
+
+
     private Dictionary<(ElementType, ElementType), ElementType> reactions = 
         new Dictionary<(ElementType, ElementType), ElementType>();
 
@@ -67,6 +81,7 @@ public class ReactionManager : MonoBehaviour
     {
         reactions[(first, second)] = result;
         reactions[(second, first)] = result;
+        recipes.Add(new Recipe(first, second, result));
     }
 
     public bool TryGetResult(ElementType first, ElementType second, out ElementType result)

@@ -45,16 +45,16 @@ public class GameOverUI : MonoBehaviourPunCallbacks
             gameManager.OnGameEnded -= ShowGameOver;
     }
 
-    private void ShowGameOver(GameState state, int winner)
+    private void ShowGameOver(GameResult state, int winner)
     {
         gameOverPanel.SetActive(true);
         UpdateRestartButton();
 
-        if (state == GameState.Won)
+        if (state == GameResult.Won)
         {
             resultText.text = "Jugador " + (winner + 1) + " ganó";
         }
-        else if (state == GameState.Draw)
+        else if (state == GameResult.Draw)
         {
             resultText.text = "Empate";
         }

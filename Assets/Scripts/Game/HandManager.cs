@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 
 public class HandManager : MonoBehaviour
@@ -11,6 +12,8 @@ public class HandManager : MonoBehaviour
     [Header("Configuración")]
     [SerializeField] private int startingHandSize = 7;
     // [SerializeField] private ElementType[] availableElements;
+
+    public int StartingHandSize => startingHandSize;
 
     [SerializeField] private DeckManager deckManager;
 
@@ -24,6 +27,9 @@ public class HandManager : MonoBehaviour
     {
         get { return selectedTile; }
     }
+
+    // avisa cuando cambia la mano: ficha agregada, quitada o seleccionada
+    public event Action OnHandChanged;
 
     public int RemainingTiles => deckManager.RemainingTiles;
 
@@ -76,6 +82,8 @@ public class HandManager : MonoBehaviour
         playerHand.RemoveTile(tile.Data);
         tileViews.Remove(tile);
 
+        OnHandChanged?.Invoke();
+
         // Destroy(tile.gameObject);
     }
 
@@ -88,6 +96,8 @@ public class HandManager : MonoBehaviour
         selectedTile = tile;
 
         selectedTile.SetSelected(true);
+
+        OnHandChanged?.Invoke();
     }
 
     public void AddTile(DominoTileData data)
@@ -96,6 +106,8 @@ public class HandManager : MonoBehaviour
 
         playerHand.AddTile(data);
         CreateTileView(data);
+
+        OnHandChanged?.Invoke();
     }
 
     public bool HasPlayableTile(BoardManager boardManager)

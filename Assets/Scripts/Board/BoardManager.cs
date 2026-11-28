@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BoardSide
+{
+    Left,
+    Right
+}
+
 public class BoardManager : MonoBehaviour
 {
     [Header("Referencias")]
@@ -21,6 +27,10 @@ public class BoardManager : MonoBehaviour
     
     // Observer: avisa cuando ocurre una reacción
     public event Action<ElementType> OnReaction;
+
+    public event Action OnStartingTileSet;
+
+    public event Action<ElementType, ElementType, ElementType> OnReactionMade;
 
     // Elementos que quedan libres en las esquinas del tablero
     public ElementType LeftEnd
@@ -52,6 +62,8 @@ public class BoardManager : MonoBehaviour
         tiles.Add(tile);
 
         UpdateBoardLayout();
+
+        OnStartingTileSet?.Invoke();
     }
 
     // Comprueba si unna reacción es valida
@@ -85,6 +97,7 @@ public class BoardManager : MonoBehaviour
         ElementType boardEnd = side == BoardSide.Right ? RightEnd : LeftEnd;
 
         ElementType reactionResult;
+        ElementType connecting;
 
         bool reaction;
 
@@ -101,6 +114,7 @@ public class BoardManager : MonoBehaviour
             }
 
             // el lado derecho recibe el resultado de la reacción
+            connecting = tile.Data.leftElement;
             tile.SetRightElement(reactionResult);
         } else
         {
@@ -114,6 +128,7 @@ public class BoardManager : MonoBehaviour
                 reactionManager.TryGetResult(boardEnd, tile.Data.rightElement, out reactionResult);
             }
             // lado izquierdo recibe resultado
+            connecting = tile.Data.rightElement;
             tile.SetLeftElement(reactionResult);
         }
 
@@ -129,6 +144,7 @@ public class BoardManager : MonoBehaviour
 
         // Observer : resultado de la reaccion
         OnReaction?.Invoke(reactionResult);
+        OnReactionMade?.Invoke(boardEnd, connecting, reactionResult);
 
         Debug.Log("Reacción producida: " + reactionResult);
 

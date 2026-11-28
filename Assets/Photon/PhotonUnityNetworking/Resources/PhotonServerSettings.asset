@@ -44,6 +44,7 @@ MonoBehaviour:
   - RPC_RestartScene
   - BroadCastPass
   - RecievePassRequest
+  - RPC_OpponentDrew
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

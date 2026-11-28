@@ -155,4 +155,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene(sceneIndex);
     }
+
+    public void NotifyDraw()
+    {
+        photonView.RPC("RPC_OpponentDrew", RpcTarget.Others);
+    }
+
+    [PunRPC]
+    private void RPC_OpponentDrew()
+    {
+        GameUIManager gameUI = FindFirstObjectByType<GameUIManager>();
+        if (gameUI == null) return;
+
+        gameUI.ApplyOpponentDraw();
+    }
 }
