@@ -9,6 +9,8 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public GameObject CreateRoomView;
     public GameObject LobbyRoomView;
     public GameObject GeneralLobyView;
+    public GameObject HowToPlayView;
+    public GameObject CreditsView;
 
     void Start()
     {
@@ -60,6 +62,8 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
         CreateRoomView.SetActive(false);
         GeneralLobyView.SetActive(false);
         MainView.SetActive(false);
+        HowToPlayView.SetActive(false);
+        CreditsView.SetActive(false);
 
         _screen.SetActive(true);
         

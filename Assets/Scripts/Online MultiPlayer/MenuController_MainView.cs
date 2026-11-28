@@ -26,4 +26,14 @@ public partial class MenuController : MonoBehaviourPunCallbacks, ILobbyCallbacks
         Debug.Log("Abriendo navegador de salas");
         SetScreen(GeneralLobyView);
     }
+
+    public void ShowHowToPlay()
+    {
+        SetScreen(HowToPlayView);
+    }
+    
+    public void ShowCredits()
+    {
+        SetScreen(CreditsView);
+    }
 }
